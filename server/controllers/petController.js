@@ -112,17 +112,60 @@ module.exports.createPetWithPhotos = async (req, res) => {
       console.error('Usuario no encontrado.');
     }
 
+    // // Si se debe crear una nueva sede
+    // if (createSede && sedeData) {
+    //   // Obtener organizationId del usuario
+    //   const organizationId = user.Organization.id;
+
+    //   // Crear la sede asociada a la organización y al usuario
+    //   // const nuevaSede = await Sede.create({ ...sedeData, organizationId, userId });
+    //   // Crear la sede asociada a la organización y al usuario
+    //   const nuevaSede = await Sede.create({
+    //     name: sedeData.name,
+    //     street: sedeData.street,
+    //     city: sedeData.city,
+    //     state: sedeData.state,
+    //     postalCode: sedeData.postalCode,
+    //     phoneNumber: sedeData.phoneNumber,
+    //     email: sedeData.email,
+    //     openingTime: sedeData.openingTime,
+    //     closingTime: sedeData.closingTime,
+    //     organizationId,
+    //     userId,
+    //   });
+    //   // Asociar la sede con la mascota
+    //   await newPet.setSede(nuevaSede);
+    // }
     // Si se debe crear una nueva sede
-    if (createSede && sedeData) {
-      // Obtener organizationId del usuario
-      const organizationId = user.Organization.id;
+if (createSede && sedeData) {
+  // Obtener organizationId del usuario
+  const organizationId = user.Organization.id;
 
-      // Crear la sede asociada a la organización y al usuario
-      const nuevaSede = await Sede.create({ ...sedeData, organizationId, userId });
+  try {
+    // Crear la sede asociada a la organización y al usuario
+    const nuevaSede = await Sede.create({
+      name: sedeData.name,
+      street: sedeData.street,
+      city: sedeData.city,
+      state: sedeData.state,
+      postalCode: sedeData.postalCode,
+      phoneNumber: sedeData.phoneNumber,
+      email: sedeData.email,
+      openingTime: sedeData.openingTime,
+      closingTime: sedeData.closingTime,
+      organizationId,
+      userId,
+    });
 
-      // Asociar la sede con la mascota
-      await newPet.setSede(nuevaSede);
-    }
+    // Asociar la sede con la mascota
+    await newPet.setSede(nuevaSede);
+
+    console.log('Sede creada exitosamente:', nuevaSede);
+  } catch (error) {
+    console.error('Error al crear la sede:', error);
+  }
+}
+
 
     // Verificar si hay archivos adjuntos
     if (req.files && req.files.length > 0) {
