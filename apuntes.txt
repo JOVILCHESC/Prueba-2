@@ -1,0 +1,9 @@
+al adoptar una mascota deberia de desaparecer la mascota de la lista de mascota de ese usuario,
+ no de los otros usuarios, ya que los otros usuarios
+ aun deberian poder ver la mascota hasta que el usuario lo adopte
+ ya que se envio una solicitud de adopcion para esa mascota.
+
+ entonces:
+ -cada usuario debe poder ver la lista de mascotas pero cuando decidadn aoptar uno 
+ y envien el formulario de verificacion, la mascota deberia de desaparecer 
+ de la lista de mascotas pero solamente para ese usuario, no para todos

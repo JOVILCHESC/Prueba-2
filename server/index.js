@@ -26,11 +26,22 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+//nuevo
+module.exports = {
+  upload,
+};
 
 app.post('/fotos', upload.array('petPhotos', 5), verifyToken, petController.createPetWithPhotos, (req, res) => {
   console.log(req.body);
   console.log(req.file);
 });
+//fotos actulizadas
+app.put('/fotos/:petId', upload.array('petPhotos', 5), verifyToken, petController.updateUserPet, (req, res) => {
+  console.log(req.body);
+  console.log(req.files);
+});
+
+
 
 // Esto le dice al servidor que sirva los archivos estáticos desde la carpeta 'uploads'
 // app.use('/uploads', express.static(path.join(__dirname, '../server/uploads')));
@@ -49,7 +60,11 @@ app.use("/pet", petRouter);
 const verificationFormRouter = require("./routes/verificationFormRoutes"); 
 app.use("/verification", verificationFormRouter);
 
+const collectRouter = require("./routes/collectRouter"); 
+app.use("/collect", collectRouter);
 
+const appointmentFormRouter = require("./routes/appointmentFormRoutes"); 
+app.use('/appointment', appointmentFormRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(3000, () => {

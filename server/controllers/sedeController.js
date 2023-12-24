@@ -1,5 +1,48 @@
 
-const { Sede, Organization, User } = require('../models');
+// const { Sede, Organization, User } = require('../models');
+
+// module.exports.createSede = async (req, res) => {
+//   try {
+//     console.log('Recibiendo datos del cliente:', req.body);
+
+//     // Obtener información del usuario autenticado
+//     const userId = req.userId;
+//     const user = await User.findByPk(userId, {
+//       include: [Organization], // Incluye la asociación con Organization
+//     });
+
+//     // Obtener organizationId del usuario
+//     const organizationId = user.Organization.id;
+
+//     // Crear el objeto sedeData con los datos del cuerpo de la solicitud
+//     const sedeData = {
+//       name: req.body.name,
+//       street: req.body.street,
+//       city: req.body.city,
+//       state: req.body.state,
+//       postalCode: req.body.postalCode,
+//       phoneNumber: req.body.phoneNumber,
+//       email: req.body.email,
+//       openingTime: req.body.openingTime,
+//       closingTime: req.body.closingTime,
+//       // Otros campos según sea necesario
+//     };
+
+//     // Crear la sede asociada a la organización y al usuario
+//     const nuevaSede = await Sede.create({ ...sedeData, organizationId, userId });
+
+//     res.status(201).json({ success: true, message: 'Sede creada exitosamente', sede: nuevaSede });
+//   } catch (error) {
+//     console.error(`Error al crear la sede: ${error.message}`);
+//     res.status(500).json({ success: false, message: 'Error interno del servidor' });
+//   }
+// };
+
+
+
+
+
+const { Sede, Organization, User, Pet } = require('../models');
 
 module.exports.createSede = async (req, res) => {
   try {
@@ -14,6 +57,24 @@ module.exports.createSede = async (req, res) => {
     // Obtener organizationId del usuario
     const organizationId = user.Organization.id;
 
+    // Crear el objeto mascotaData con los datos del cuerpo de la solicitud
+    const mascotaData = {
+      name: req.body.name,
+      species: req.body.species,
+      race: req.body.race,
+      age: req.body.age,
+      sex: req.body.sex,
+      date_born: req.body.date_born,
+      description: req.body.description,
+      // Otros campos según sea necesario
+    };
+
+    // Crear la mascota asociada a la organización y al usuario
+    const nuevaMascota = await Pet.create({ ...mascotaData, organizationId, userId });
+
+    // Obtener el ID de la mascota recién creada
+    const mascotaId = nuevaMascota.id;
+
     // Crear el objeto sedeData con los datos del cuerpo de la solicitud
     const sedeData = {
       name: req.body.name,
@@ -25,6 +86,7 @@ module.exports.createSede = async (req, res) => {
       email: req.body.email,
       openingTime: req.body.openingTime,
       closingTime: req.body.closingTime,
+      mascotaId, // Asociar la sede con la mascota recién creada
       // Otros campos según sea necesario
     };
 

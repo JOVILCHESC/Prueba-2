@@ -54,6 +54,9 @@ module.exports = (sequelize, DataTypes) => {
       models.Sede.belongsTo(models.Organization, {
         foreignKey: 'organizationId',
       });
+      models.Sede.belongsTo(models.Pet, {
+        foreignKey: 'petId', // Nombre de la clave foránea en la tabla Sede
+      });
     };
   
     return Sede;

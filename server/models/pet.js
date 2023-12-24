@@ -69,6 +69,16 @@ module.exports = (sequelize, DataTypes) => {
       models.Pet.hasMany(models.PetPhoto, {
         foreignKey: 'petId', // Nombre de la clave foránea en la tabla de 
       });
+
+       // Asociación con Collect
+       models.Pet.hasMany(models.Collect, {
+        foreignKey: 'petId', // Nombre de la clave foránea en la tabla Collect
+    });
+
+    models.Pet.hasMany(models.VerificationForm, {
+      foreignKey: 'newPetId', // Nombre de la clave foránea en la tabla VerificationForm
+    });
+    
     };
   
     return Pet;

@@ -35,10 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     filename: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: 'defaultFilename',
     },
     path: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: 'defaultPath'
     },
     // Otros campos según tus necesidades
   });
