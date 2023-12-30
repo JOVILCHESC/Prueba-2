@@ -31,6 +31,24 @@ module.exports = {
   upload,
 };
 
+//otra configruacion de multer:
+const contributionStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, 'contribution_uploads'));
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const contributionUpload = multer({ storage: contributionStorage });
+
+module.exports = {
+  upload,
+  contributionUpload,
+};
+////////////////////////////////////////////////
+
 app.post('/fotos', upload.array('petPhotos', 5), verifyToken, petController.createPetWithPhotos, (req, res) => {
   console.log(req.body);
   console.log(req.file);
@@ -44,7 +62,6 @@ app.put('/fotos/:petId', upload.array('petPhotos', 5), verifyToken, petControlle
 
 
 // Esto le dice al servidor que sirva los archivos estáticos desde la carpeta 'uploads'
-// app.use('/uploads', express.static(path.join(__dirname, '../server/uploads')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
@@ -66,56 +83,18 @@ app.use("/collect", collectRouter);
 const appointmentFormRouter = require("./routes/appointmentFormRoutes"); 
 app.use('/appointment', appointmentFormRouter);
 
+const adoptedPetRouter = require("./routes/adoptedPetRoutes"); 
+app.use('/adoptedPet', adoptedPetRouter);
+
+const vaccineFormRouter = require("./routes/vaccineFormRoutes"); 
+app.use('/vaccineForm', vaccineFormRouter);
+
+const fundraisingRoutes = require('./routes/fundrainsingRoutes');
+app.use('/fundraising', fundraisingRoutes);
+
 db.sequelize.sync().then(() => {
   app.listen(3000, () => {
     console.log("Server running on port 3000");
   });
 });
 
-
-
-
-// const express = require("express");
-// const app = express();
-// const cors = require('cors');
-// const bodyParser = require('body-parser');
-// const multer = require('multer');
-// const path = require('path');  // Importa el módulo 'path' para trabajar con rutas de archivos
-// const db = require("./models");
-// const petController = require('../server/controllers/petController');
-// const { verifyToken } = require('./middlewares/authMiddleware');
-
-// app.use(cors());
-// app.use(bodyParser.json());
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     // Utiliza la ruta absoluta para la carpeta de destino
-//     cb(null, path.join(__dirname, '../server/uploads').replace(/\\/g, '/'));
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, `${Date.now()}_${file.originalname}`);
-//   },
-// });
-
-// const upload = multer({ storage });
-
-// app.post('/fotos', upload.array('petPhotos', 5), verifyToken, petController.createPetWithPhotos, (req, res) => {
-//   console.log(req.body);
-//   console.log(req.file);
-// });
-
-// const userRouter = require("./routes/authRoutes");
-// app.use("/user", userRouter);
-
-// const petRouter = require("./routes/petRoutes");
-// app.use("/pet", petRouter);
-
-// // Ruta para servir archivos estáticos (imágenes)
-// app.use('/uploads', express.static(path.join(__dirname, '../server/uploads')));
-
-// db.sequelize.sync().then(() => {
-//   app.listen(3000, () => {
-//     console.log("Server running on port 3000");
-//   });
-// });

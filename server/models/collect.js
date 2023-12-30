@@ -43,20 +43,20 @@ module.exports = (sequelize, DataTypes) => {
 
 
 
- // En tu controlador o ruta para obtener mascotas con colectas
-module.exports.getPetsWithCollects = async (req, res) => {
-  try {
-    const pets = await Pet.findAll({
-      include: {
-        model: Collect,
-        attributes: ['id', 'amountRaised', 'targetAmount', 'deadline'],
-      },
-    });
+//  // En tu controlador o ruta para obtener mascotas con colectas
+// module.exports.getPetsWithCollects = async (req, res) => {
+//   try {
+//     const pets = await Pet.findAll({
+//       include: {
+//         model: Collect,
+//         attributes: ['id', 'amountRaised', 'targetAmount', 'deadline'],
+//       },
+//     });
 
-    res.status(200).json({ success: true, pets });
-  } catch (error) {
-    console.error('Error al obtener mascotas con colectas:', error);
-    res.status(500).json({ success: false, message: 'Error interno del servidor' });
-  }
-};
+//     res.status(200).json({ success: true, pets });
+//   } catch (error) {
+//     console.error('Error al obtener mascotas con colectas:', error);
+//     res.status(500).json({ success: false, message: 'Error interno del servidor' });
+//   }
+// };
 

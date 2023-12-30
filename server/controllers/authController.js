@@ -1,3 +1,82 @@
+// const bcrypt = require('bcrypt');
+// const jwt = require('jsonwebtoken');
+// const { User, Organization } = require('../models');
+// const transporter = require('../middlewares/emailConfig'); // Importa el transporter desde el archivo emailConfig.js
+
+// // Función para enviar correo de verificación
+// const sendVerificationEmail = async (email) => {
+//   const mailOptions = {
+//     from: 'tu_correo@gmail.com',
+//     to: email,
+//     subject: 'Verificación de Registro',
+//     text: 'Por favor, haz clic en el siguiente enlace para verificar tu registro: [ENLACE]',
+//   };
+
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     console.log('Correo de verificación enviado con éxito.');
+//   } catch (error) {
+//     console.error('Error al enviar el correo de verificación:', error);
+//   }
+// };
+
+// exports.registerUser = async (req, res) => {
+//   try {
+//     const { type, ...userData } = req.body;
+
+//     if (!type || (type !== 'user' && type !== 'organization')) {
+//       return res.status(400).json({ error: 'El campo "type" es inválido' });
+//     }
+//     console.log('Datos del usuario:', userData);
+
+//     // Verificar si ya existe un usuario con el mismo correo electrónico
+//     const existingUser = await User.findOne({ where: { email: userData.email } });
+
+//     if (existingUser) {
+//       return res.status(400).json({ error: 'Ya existe un usuario con este correo electrónico' });
+//     }
+
+//     // Hashear la contraseña antes de almacenarla en la base de datos
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+
+//     const user = await User.create({ ...userData, type, password: hashedPassword });
+//     let organizationData = null;
+
+//     if (type === 'organization') {
+//       organizationData = req.body.organizationData; // No vuelvas a declarar organizationData con 'let'
+//       console.log('Datos de la organización:', organizationData);
+
+//       if (!organizationData || !organizationData.legal_name) {
+//         return res.status(400).json({ error: 'Todos los campos de la organización son obligatorios' });
+//       }
+
+//       organizationData.userId = user.id;
+
+//       try {
+//         await Organization.create(organizationData);
+//       } catch (orgError) {
+//         console.error('Error al crear la organización:', orgError);
+//         return res.status(500).json({ error: 'Error interno al crear la organización' });
+//       }
+//     }
+
+//     // Envía el correo de verificación después de crear el usuario
+//     sendVerificationEmail(userData.email);
+
+//     console.log('Usuario creado:', user.toJSON());
+//     console.log('Datos de la organización:', organizationData);
+
+//     res.status(201).json({ message: 'Registro exitoso' });
+//   } catch (error) {
+//     console.error('Error al registrar:', error);
+//     res.status(500).json({ error: 'Error interno del servidor' });
+//   }
+// };
+
+
+
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 // const tokenKey = process.env.TOKEN_KEY;
