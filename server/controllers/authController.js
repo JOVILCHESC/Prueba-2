@@ -133,8 +133,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-
-// Inicio de sesión y generación de token
 // Inicio de sesión y generación de token
 exports.loginUser = async (req, res) => {
   try {

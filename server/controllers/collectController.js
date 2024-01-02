@@ -1,5 +1,5 @@
 
-const { Pet, PetPhoto, User, Organization, Sede, Collect } = require('../models');
+const { Pet, PetPhoto, User, Organization, Sede, Collect, CollectImage } = require('../models');
 const { Op } = require('sequelize');
 module.exports.iniciarColecta = async (req, res) => {
   try {
@@ -97,35 +97,6 @@ module.exports.getPetsWithActiveCollects = async (req, res) => {
 
 
 
-// //obtener las colectas a partir de la mascota seleccionada
-// // En tu controlador o ruta para obtener las colectas de una mascota específica
-// module.exports.getCollectsForPet = async (req, res) => {
-//   const { petId } = req.params;
-
-//   try {
-//     const petWithCollects = await Pet.findByPk(petId, {
-//       include: {
-//         model: Collect,
-//         attributes: ['id', 'amountRaised', 'targetAmount', 'deadline'],
-//         where: {
-//           deadline: { [Op.gt]: new Date() }, // Filtrar colectas activas
-//         },
-//       },
-//     });
-
-//     if (!petWithCollects) {
-//       return res.status(404).json({ success: false, message: 'Mascota no encontrada' });
-//     }
-
-//     res.status(200).json({ success: true, collects: petWithCollects.Collects });
-//   } catch (error) {
-//     console.error('Error al obtener colectas de la mascota:', error);
-//     res.status(500).json({ success: false, message: 'Error interno del servidor' });
-//   }
-// };
-
-
-
 
 // Obtener las colectas a partir de la mascota seleccionada
 // En tu controlador o ruta para obtener las colectas de una mascota específica
@@ -159,5 +130,29 @@ module.exports.getCollectsForPet = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener colectas de la mascota:', error);
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+};
+
+
+
+
+module.exports.uploadCollectImage = async (req, res) => {
+  try {
+    // Aquí puedes acceder a la imagen subida usando req.file
+    const { filename, path } = req.file;
+    const { collectId } = req.body;
+
+    // Puedes almacenar la información de la imagen en la base de datos si es necesario
+    await CollectImage.create({
+      filename,
+      path,
+      collectId,
+      // Otros campos según los detalles específicos que necesites.
+    });
+
+    res.status(201).json({ message: 'Imagen de la colecta subida exitosamente' });
+  } catch (error) {
+    console.error('Error al subir la imagen de la colecta:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };

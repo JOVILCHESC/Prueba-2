@@ -34,29 +34,16 @@ module.exports = (sequelize, DataTypes) => {
       models.Collect.belongsTo(models.Sede, { 
         foreignKey: 'sedeId' 
       });
+      // Asociación con CollectImage
+      models.Collect.hasMany(models.CollectImage, {
+        foreignKey: 'collectId',
+        onDelete: 'CASCADE', // Otra opción podría ser 'SET NULL' dependiendo de tus necesidades
+        hooks: true,
+      });
 
     };
   
     return Collect;
   };
   
-
-
-
-//  // En tu controlador o ruta para obtener mascotas con colectas
-// module.exports.getPetsWithCollects = async (req, res) => {
-//   try {
-//     const pets = await Pet.findAll({
-//       include: {
-//         model: Collect,
-//         attributes: ['id', 'amountRaised', 'targetAmount', 'deadline'],
-//       },
-//     });
-
-//     res.status(200).json({ success: true, pets });
-//   } catch (error) {
-//     console.error('Error al obtener mascotas con colectas:', error);
-//     res.status(500).json({ success: false, message: 'Error interno del servidor' });
-//   }
-// };
 

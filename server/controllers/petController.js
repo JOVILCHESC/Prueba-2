@@ -1,72 +1,3 @@
-// // controllers/petController.js
-
-// const { Pet, PetPhoto, User, Organization } = require('../models');
-// const path = require('path');
-// module.exports.createPetWithPhotos = async (req, res) => {
-//   try {
-//     console.log('req.body:', req.body);
-//     console.log('req.files:', req.files);
-//     // Obtener información del usuario autenticado
-//     const userId = req.userId;
-//     const user = await User.findByPk(userId, {
-//       include: [Organization], // Incluye la asociación con Organization
-//     });
-//     const { name, species, race, age, sex, date_born, description } = req.body;
-
-//     // Crear una nueva mascota
-//     const newPet = await Pet.create({
-//       name,
-//       species,
-//       race,
-//       age,
-//       sex,
-//       date_born,
-//       description,
-//       userId: userId, // Asociar la mascota con el usuario autenticado
-//       organizationId: user.Organization.id,
-//     });
-//     console.log('Mascota creada:', newPet);
-
-//     // Asociar la mascota con el usuario en la base de datos
-//     // const user = await User.findByPk(userId);
-  
-//     if (user) {
-//       console.log('Usuario encontrado:', user);
-//       try {
-//         await user.addPet(newPet);
-//         console.log('Asociación exitosa.');
-//       } catch (associationError) {
-//         console.error('Error al asociar la mascota al usuario:', associationError);
-//         throw associationError;
-//       }
-//     } else {
-//       console.error('Usuario no encontrado.');
-//     }
-
-//     // Verificar si hay archivos adjuntos
-//     if (req.files && req.files.length > 0) {
-      
-//       // Crear registros de fotos asociadas a la mascota
-//       const petPhotos = req.files.map((file) => ({
-//         filename: file.filename,
-//         // path: file.path,
-//         path: path.join('uploads', file.filename),
-//         petId: newPet.id,
-//       }));
-//       await PetPhoto.bulkCreate(petPhotos);
-//     }
-//     console.log('Archivos recibidos:', req.files);
-
-//     console.log('Mascota creada exitosamente:', newPet);
-
-//     res.status(201).json({ success: true, message: 'Mascota creada exitosamente', pet: newPet });
-//   } catch (error) {
-//     console.error(`Error creating pet: ${error.message}`);
-//     res.status(500).json({ success: false, message: 'Error interno del servidor' });
-//   }
-// };
-
-
 // controllers/petController.js
 
 const { Pet, PetPhoto, User, Organization, Sede, VerificationForm } = require('../models');
@@ -417,3 +348,41 @@ module.exports.deleteUserPet = async (req, res) => {
 };
 
   
+
+
+module.exports.getPetById = async (req, res) => {
+  try {
+    const petId = req.params.petId;
+
+    // Verificar si se proporcionó un ID válido
+    if (!petId) {
+      return res.status(400).json({ success: false, message: 'ID de mascota no válido' });
+    }
+
+    // Buscar la mascota por su ID
+    const pet = await Pet.findOne({
+      where: {
+        id: petId,
+      },
+      include: [
+        PetPhoto,
+        {
+          model: User,
+          include: Organization,
+        },
+        Sede,
+        VerificationForm,
+      ],
+    });
+
+    // Verificar si se encontró la mascota
+    if (!pet) {
+      return res.status(404).json({ success: false, message: 'Mascota no encontrada' });
+    }
+
+    res.status(200).json({ success: true, pet });
+  } catch (error) {
+    console.error(`Error obteniendo mascota por ID: ${error.message}`);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+};

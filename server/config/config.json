@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "rockyONE",
-    "database": "db_adopte_me",
+    "database": "db_all_adopts",
     "host": "localhost",
     "dialect": "mysql"
   },

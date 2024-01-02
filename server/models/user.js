@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      dateBorn: {
+        type: DataTypes.DATE, // Cambiado a DataTypes.DATE para representar la fecha de nacimiento
+        allowNull: true,
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,

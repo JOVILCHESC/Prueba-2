@@ -207,17 +207,55 @@ module.exports.getFundraisingDetails = async (req, res) => {
 module.exports.getUserFundraisings = async (req, res) => {
   try {
     const userId = req.userId;
+    console.log('ID de usuario autenticado:', userId);
+    // Agrega un log para verificar que la ruta está siendo llamada
+    console.log('Obteniendo colectas iniciadas por el usuario...');
 
     // Buscar todas las colectas creadas por el usuario
     const userFundraisings = await Fundraising.findAll({
       where: {
-        userId,
+        userId: userId,
       },
     });
-
+    console.log('Colectas iniciadas por el usuario:', userFundraisings);
     res.status(200).json({ success: true, userFundraisings });
   } catch (error) {
     console.error('Error al obtener colectas iniciadas por el usuario:', error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+  }
+};
+
+
+module.exports.editFundraising = async (req, res) => {
+  try {
+    const { fundraisingId } = req.params;
+    const { title, description, goalAmount, currentAmount, deadline, status, currentAccount, bankName, rutCompany, holder } = req.body;
+
+    // Buscar la colecta por su ID
+    const fundraising = await Fundraising.findByPk(fundraisingId);
+
+    if (!fundraising) {
+      return res.status(404).json({ success: false, message: 'Colecta no encontrada.' });
+    }
+
+    // Actualizar los campos de la colecta
+    fundraising.title = title;
+    fundraising.description = description;
+    fundraising.goalAmount = goalAmount;
+    fundraising.currentAmount = currentAmount;
+    fundraising.deadline = deadline;
+    fundraising.status = status;
+    fundraising.currentAccount = currentAccount;
+    fundraising.bankName = bankName;
+    fundraising.rutCompany = rutCompany;
+    fundraising.holder = holder;
+
+    // Guardar los cambios en la base de datos
+    await fundraising.save();
+
+    res.status(200).json({ success: true, fundraising });
+  } catch (error) {
+    console.error('Error al editar la colecta:', error);
     res.status(500).json({ success: false, message: 'Error interno del servidor.' });
   }
 };
