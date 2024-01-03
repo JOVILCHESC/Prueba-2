@@ -177,3 +177,44 @@ module.exports.getPosiblesAdoptantes = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 };
+
+
+
+
+
+
+
+module.exports.getVerificationFormsByUserOrPet = async (req, res) => {
+  try {
+    const { userId, petId } = req.params;
+
+    let whereCondition = {};
+    
+    if (userId) {
+      whereCondition.userId = userId;
+    }
+
+    if (petId) {
+      whereCondition.petId = petId;
+    }
+
+    const verificationForms = await VerificationForm.findAll({
+      where: whereCondition,
+      include: [
+        {
+          model: User,
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Pet,
+          attributes: ['name'],
+        },
+      ],
+    });
+
+    res.status(200).json({ verificationForms });
+  } catch (error) {
+    console.error('Error al obtener formularios de verificación:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};

@@ -181,6 +181,40 @@ module.exports.contributeToFundraising = async (req, res) => {
   }
 };
 
+// module.exports.contributeToFundraising = async (req, res) => {
+//   try {
+//     const { fundraisingId } = req.params;
+//     const { transactionProof } = req.file;
+//     const { userId } = req.body; // Obtener el ID del usuario desde el cuerpo de la solicitud
+
+//     // Guardar la contribución en la base de datos
+//     const contribution = await Contribution.create({
+//       filename: req.file.filename,
+//       path: req.file.path,
+//       fundraisingId,
+//       userId: userId || null, // Asignar el userId al registro de contribución, o null si userId no está presente
+//     });
+
+//     // Actualizar el monto actual en la colecta
+//     const fundraising = await Fundraising.findByPk(fundraisingId);
+//     if (!fundraising) {
+//       return res.status(404).json({ success: false, message: 'Colecta no encontrada.' });
+//     }
+
+//     // Actualizar el monto actual con la cantidad aportada
+//     // fundraising.currentAmount += parseFloat(req.body.amount);
+//     // await fundraising.save();
+
+//     res.status(201).json({ success: true, contribution });
+//   } catch (error) {
+//     console.error('Error al realizar la aportación:', error);
+//     res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+//   }
+// };
+
+
+
+
 
 module.exports.getFundraisingDetails = async (req, res) => {
   try {
@@ -256,6 +290,64 @@ module.exports.editFundraising = async (req, res) => {
     res.status(200).json({ success: true, fundraising });
   } catch (error) {
     console.error('Error al editar la colecta:', error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+  }
+};
+
+
+
+module.exports.getContributions = async (req, res) => {
+  try {
+    const { fundraisingId } = req.params;
+
+    // Asegúrate de que fundraisingId tenga un valor antes de realizar la consulta
+    if (!fundraisingId) {
+      return res.status(400).json({ success: false, message: 'ID de recaudación no proporcionado en la solicitud.' });
+    }
+
+    const contributions = await Contribution.findAll({
+      where: { fundraisingId },
+    });
+
+    res.json({ success: true, contributions });
+  } catch (error) {
+    console.error('Error al obtener las aportaciones de la recaudación:', error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+  }
+};
+
+
+
+
+
+module.exports.deleteFundraising = async (req, res) => {
+  try {
+    const { fundraisingId } = req.params;
+
+    // Asegúrate de que fundraisingId tenga un valor antes de realizar la eliminación
+    if (!fundraisingId) {
+      return res.status(400).json({ success: false, message: 'ID de recaudación no proporcionado en la solicitud.' });
+    }
+
+    // Verifica si la colecta existe
+    const existingFundraising = await Fundraising.findByPk(fundraisingId);
+    if (!existingFundraising) {
+      return res.status(404).json({ success: false, message: 'La colecta no existe.' });
+    }
+
+    // Elimina la colecta y las contribuciones asociadas
+    await Fundraising.destroy({
+      where: { id: fundraisingId },
+    });
+
+    // Elimina las contribuciones asociadas (opcional, dependiendo de tu lógica)
+    await Contribution.destroy({
+      where: { fundraisingId },
+    });
+
+    res.json({ success: true, message: 'Colecta eliminada exitosamente.' });
+  } catch (error) {
+    console.error('Error al eliminar la colecta:', error);
     res.status(500).json({ success: false, message: 'Error interno del servidor.' });
   }
 };

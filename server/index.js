@@ -143,12 +143,11 @@ app.put('/fotos/:petId', upload.array('petPhotos', 5), verifyToken, petControlle
 // Esto le dice al servidor que sirva los archivos estáticos desde la carpeta 'uploads'
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use('/contribution_uploads', express.static(path.join(__dirname, 'contribution_uploads')));
 
 
-
-
-// Esto le dice al servidor que sirva los archivos estáticos desde la carpeta 'uploads'
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// // Esto le dice al servidor que sirva los archivos estáticos desde la carpeta 'uploads'
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 const sedeRouter = require("./routes/sedeRoutes");

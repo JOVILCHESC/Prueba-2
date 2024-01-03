@@ -15,6 +15,13 @@ module.exports = (sequelize, DataTypes) => {
       models.Contribution.belongsTo(models.Fundraising, {
         foreignKey: 'fundraisingId',
       });
+
+      // Relación con el modelo User (Usuario que hizo la contribución)
+    models.Contribution.belongsTo(models.User, {
+      foreignKey: 'userId',
+      allowNull: true,
+    });
+    
     };
   
     return Contribution;

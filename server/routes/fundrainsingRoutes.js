@@ -19,7 +19,11 @@ router.get('/active', fundraisingController.getActiveFundraisings);
 router.post('/:fundraisingId/contribute', contributionUpload.single('transactionProof'), fundraisingController.contributeToFundraising);
 // Ruta para obtener detalles de una colecta
 router.get('/:fundraisingId', fundraisingController.getFundraisingDetails);
-//Ruta para actualizar una colecta por su id
-// router.put('/fundraising/:fundraisingId/edit', fundraisingController.editFundraising);
+// Ruta para obtener contribuciones asociadas a una recaudación específica
+router.get('/:fundraisingId/contributions', fundraisingController.getContributions);
+
+// Nueva ruta para eliminar una colecta
+router.delete('/:fundraisingId/delete', verifyToken, fundraisingController.deleteFundraising);
+
 
 module.exports = router;
